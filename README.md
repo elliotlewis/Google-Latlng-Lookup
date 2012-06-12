@@ -80,7 +80,7 @@ Screen Shots
 
 <a id="global_settings">**Global Settings**</a>
 
-![Global Settings] (Google-Latlng-Lookup/raw/master/screen_shots/global_settings.png.png.png)
+![Global Settings] (Google-Latlng-Lookup/raw/master/screen_shots/global_settings.png)
 
 <a id="channel_field">**Channel Field**</a>
 
