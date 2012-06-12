@@ -76,19 +76,19 @@ Screen Shots
 
 <a id="installation">**Installing**</a>
 
-![Installing] (screen_shots/google_latlng_lookup_installing.png)
+![Installing] (raw/master/screen_shots/google_latlng_lookup_installing.png)
 
 <a id="global_settings">**Global Settings**</a>
 
-![Global Settings] (screen_shots/global_settings.png.png.png)
+![Global Settings] (raw/master/screen_shots/global_settings.png.png.png)
 
 <a id="channel_field">**Channel Field**</a>
 
-![Channel Field] (screen_shots/google_latlng_lookup_channel_field.png)
+![Channel Field] (raw/master/screen_shots/google_latlng_lookup_channel_field.png)
 
 <a id="publish_screen">**Publish Screen**</a>
 
-![Publish Screen] (screen_shots/google_latlng_lookup_publish_screen.png)
+![Publish Screen] (raw/master/screen_shots/google_latlng_lookup_publish_screen.png)
 
 
 [Google Maps V3]: (https://developers.google.com/maps/documentation/javascript/)
