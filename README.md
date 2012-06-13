@@ -26,14 +26,14 @@ Description
 [Google Maps V3] is a great ([mostly free]) Maps service to use on your clients websites.
 This fieldtype was developed to overcome the requirements for Google Map's markers.
 Google Maps requires the Latitude and Longitude to place a marker. Generally people don't know their position on the earth by this data!
-Handily Google also has [geocoding] to look up written address details and return the the Lat/Lng co-ordinates.
+Handily Google also has [geocoding] to look up written address details and return the Lat/Lng co-ordinates.
 It is possible to add a standard text area fieldtype to EE for the user to enter an address and then in the template use geocoding to find the Lat/Lng and then position a marker on the Map.
 
 The problem with this approach is, if you had 20 markers to place on the map every page refresh will hit Geocode 20 times for the same data. This isn't very efficient and could use up your usage limit ([mostly free]!). These co-ordinates should be stored for later usage. This fieldtype does the Geocode lookup in the CP so the Lat/Lng is stored in EEs database.
 
 The fieldtype has 3 fields, 1 is editable for the address and the other 2 show the returned co-ordinates. All 3 fields or the combined co-ordinate is [available](#templatetags).
-There's also a little map preview of the returned co-ordinates so the user can check if [Googles found the right place!](publish_screen)
-There's [Global Settings](global_settings) for default values every time the fieldtype is added to a field group, and default settings at a [field group](channel_field) level.
+There's also a little map preview of the returned co-ordinates so the user can check if [Googles found the right place](#publish_screen).
+There's [Global Settings](#global_settings) for default values every time the fieldtype is added to a field group, and default settings at a [field group](#channel_field) level.
 
 **Note**
 
