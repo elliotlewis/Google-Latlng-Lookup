@@ -13,7 +13,7 @@ Version History
    - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates.
    - Added more error feedback.
    - Feedback on type of result returned, Eg. Approximate location. 
-* __1.0, 12/06/2012__  
+ * __1.0, 12/06/2012__  
     1st release. Global and Channel Field default settings.
 
 
