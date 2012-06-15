@@ -1,6 +1,6 @@
 var google_lat_lng_lookup_map = (function() {
 	
-	var geocoder, address_input, lat_input, lng_input, lookup_button, prefix;
+	var geocoder, prefix, address_input, lat_input, lng_input, lookup_button, feedback;
 	
 	function findCoords(address){
 
@@ -24,8 +24,8 @@ var google_lat_lng_lookup_map = (function() {
 		geocoder.geocode( { 'address': address }, function(results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 
-				var lat = results[0].geometry.location.$a;
-				var lng = results[0].geometry.location.ab;
+				var lat = results[0].geometry.location.lat();
+				var lng = results[0].geometry.location.lng();
 				
 				lat_input.val(lat).css('display','none').fadeIn('slow');
 				lng_input.val(lng).css('display','none').fadeIn('slow');
@@ -35,7 +35,22 @@ var google_lat_lng_lookup_map = (function() {
 					var markers = 'markers=color:blue%7Csize:mid%7Clabel:A%7C'+lat+','+lng;
 					$(map_preview).attr('src', 'http://maps.googleapis.com/maps/api/staticmap?&size=170x170&zoom=13&maptype=roadmap&'+markers+'&sensor=false');
 				}
+				
+				// Feedback on type of result
+				if (results[0].geometry.location_type == google.maps.GeocoderLocationType.ROOFTOP){
+					feedback.text('Accurate location').hide().fadeIn();
+				} else {
+					feedback.text('Approximate location').hide().fadeIn();
+				}
 			
+			} else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+			
+				address_input.val("Google found no results. Try to be more sprecific.");
+			
+			} else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+			
+				address_input.val("You have made too many request on this domain. Over quota.");
+
 			} else {
 				address_input.val("Geocode error: " + status);
 			}
@@ -53,6 +68,7 @@ var google_lat_lng_lookup_map = (function() {
 		lat_input = $("input[name="+prefix+"latitude]"),
 		lng_input = $("input[name="+prefix+"longitude]"),
 		lookup_button = $("button[name="+prefix+"lookup_button]");
+		feedback = $("span."+prefix+"feedback");
 		
 		map_preview = false;
 		if($("."+prefix+"preview_map").length > 0) map_preview = $("."+prefix+"preview_map");

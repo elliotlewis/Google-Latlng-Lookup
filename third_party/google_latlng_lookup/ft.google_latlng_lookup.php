@@ -14,7 +14,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	
 	var $info = array(
 		'name'		=> 'Google Maps Lat Lng Lookup',
-		'version'	=> '1.0'
+		'version'	=> '1.0.1'
 	);
 	
 	var $prefix = 'google_latlng_lookup_';
@@ -65,6 +65,8 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		
 		$form .= form_label('Longitude', $this->prefix.'longitude');
 		$form .= form_input($this->prefix.'longitude', $longitude, 'readonly="readonly" style="border-color:white;"');
+		
+		$form .= '<br /><span class="'.$this->prefix.'feedback" style="display:block;margin-top:5px;color:steelBlue;"></span>';
 		
 		$form .= '</div>';
 		
@@ -180,6 +182,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$form .= '<p>';
 		$markers = 'markers=color:blue%7Csize:mid%7Clabel:A%7C'.$val['latitude'].','.$val['longitude'];
 		$form .= '<img src="http://maps.googleapis.com/maps/api/staticmap?size=170x170&zoom=13&maptype=roadmap&'.$markers.'&sensor=false" alt="Preview map of address" class="preview_map" style="margin:20px; border:#5f6c74 1px solid;" />';
+		$form .= '<br /><span class="feedback"></span>';
 		$form .= '</p>';
 
 		return $form;

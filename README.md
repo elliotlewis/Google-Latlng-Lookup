@@ -1,16 +1,20 @@
 Google Maps Lat/Lng Lookup EE Fieldtype
 =======================================
 
-* Author:					[Elliot Lewis](http://notwothesame.com)
-* Repro on GitHub:			[GitHub.com](https://github.com/elliotlewis/Google-Latlng-Lookup)
-* Product Page on Devot-ee:	[Devot-ee.com](http://devot-ee.com/add-ons/google-latlng-lookup)
+ * Author:					[Elliot Lewis](http://notwothesame.com)
+ * Repro on GitHub:			[GitHub.com](https://github.com/elliotlewis/Google-Latlng-Lookup)
+ * Product Page on Devot-ee:	[Devot-ee.com](http://devot-ee.com/add-ons/google-latlng-lookup)
 
 
 Version History
 ---------------
 
-- 1.0, 12/06/12
-  1st release. Global and Channel Field default settings.
+ * __1.0.1, 15/06/2012__  
+   - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates.
+   - Added more error feedback.
+   - Feedback on type of result returned, Eg. Approximate location. 
+* __1.0, 12/06/2012  
+    1st release. Global and Channel Field default settings.
 
 
 Requirements
@@ -89,4 +93,4 @@ Screen Shots
 
 [Google Maps V3]: (https://developers.google.com/maps/documentation/javascript/)
 [mostly free]: (https://developers.google.com/maps/documentation/javascript/usage#usage_limits)
-[geocoding]: https://developers.google.com/maps/documentation/javascript/geocoding
+[geocoding]: (https://developers.google.com/maps/documentation/javascript/geocoding)
