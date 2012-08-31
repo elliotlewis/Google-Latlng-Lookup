@@ -57,6 +57,18 @@ var google_lat_lng_lookup_map = (function() {
 		
 		});
 	}
+	
+	function update_map() {
+		
+		fs = $(this).closest("fieldset");
+		
+		lat = fs.find('input.geocode_lat').val();
+		lng = fs.find('input.geocode_lng').val();
+		
+		src = 'http://maps.googleapis.com/maps/api/staticmap?sensor=false&size=170x170&zoom=13&maptype=roadmap&markers=color:blue%7Csize:mid%7Clabel:A%7C'+lat+','+lng;
+		
+		fs.find("img").attr("src",src);
+	}
 
 	return function(p) {
 	
@@ -75,6 +87,8 @@ var google_lat_lng_lookup_map = (function() {
 		
 		// Bind button
 		$(lookup_button).on('click', findCoords);
+		
+		$("input.geocode_latlng").on('keyup', update_map);
 
 	}
 	

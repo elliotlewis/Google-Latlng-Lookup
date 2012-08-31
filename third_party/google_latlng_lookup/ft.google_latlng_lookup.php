@@ -14,7 +14,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	
 	var $info = array(
 		'name'		=> 'Google Maps Lat Lng Lookup',
-		'version'	=> '1.0.1'
+		'version'	=> '1.0.2'
 	);
 	
 	var $prefix = 'google_latlng_lookup_';
@@ -46,6 +46,17 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 				$$key = $this->settings[$key];
 			}
 		}
+		
+		// override values from POST if present
+		if(!empty($_POST)) {
+			
+			foreach($data_points as $key) {
+				
+				if(!empty($_POST[$this->prefix.$key])) {
+					$$key = $this->EE->input->post($this->prefix.$key,TRUE);
+				}
+			}
+		}
 
 		$options = compact($data_points);
 		
@@ -61,10 +72,10 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$form .= '<br />';
 		
 		$form .= form_label('Latitude', $this->prefix.'latitude');
-		$form .= form_input($this->prefix.'latitude', $latitude, 'readonly="readonly" style="border-color:white;"');
+		$form .= form_input($this->prefix.'latitude', $latitude, ' class="geocode_latlng geocode_lat" style="border-color:white;"');
 		
 		$form .= form_label('Longitude', $this->prefix.'longitude');
-		$form .= form_input($this->prefix.'longitude', $longitude, 'readonly="readonly" style="border-color:white;"');
+		$form .= form_input($this->prefix.'longitude', $longitude, ' class="geocode_latlng geocode_lng" style="border-color:white;"');
 		
 		$form .= '<br /><span class="'.$this->prefix.'feedback" style="display:block;margin-top:5px;color:steelBlue;"></span>';
 		
@@ -96,6 +107,22 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		return $data;
 	}
 	
+	
+	// --------------------------------------------------------------------
+	
+	function validate($data) {
+		
+		$lat = $this->EE->input->post($this->prefix.'latitude', TRUE);
+		$lng = $this->EE->input->post($this->prefix.'longitude', TRUE);
+		
+		if(!is_numeric($lat) || !is_numeric($lng)) {
+			return 'Latitude and Longitude must be numbers';
+		}
+		
+		return TRUE;
+		
+	}
+	 
 	// --------------------------------------------------------------------
 		
 	/**

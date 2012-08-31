@@ -8,7 +8,8 @@ Google Maps Lat/Lng Lookup EE Fieldtype
 
 Version History
 ---------------
-
+ * __1.0.2, 31/08/2012__
+   - Allowed fine tuning of co-ordinates by adjusting form values
  * __1.0.1, 15/06/2012__  
    - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates.
    - Added more error feedback.
