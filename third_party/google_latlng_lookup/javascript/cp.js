@@ -76,11 +76,11 @@ var google_lat_lng_lookup_map = (function() {
 
 		geocoder = new google.maps.Geocoder();
 		
-		address_input = $("input[name="+prefix+"address]"),
-		lat_input = $("input[name="+prefix+"latitude]"),
-		lng_input = $("input[name="+prefix+"longitude]"),
-		lookup_button = $("button[name="+prefix+"lookup_button]");
-		feedback = $("span."+prefix+"feedback");
+		address_input	= $("input[name="+prefix+"address]"),
+		lat_input		= $("input[name="+prefix+"latitude]"),
+		lng_input		= $("input[name="+prefix+"longitude]"),
+		lookup_button	= $("button[name="+prefix+"lookup_button]");
+		feedback		= $("span."+prefix+"feedback");
 		
 		map_preview = false;
 		if($("."+prefix+"preview_map").length > 0) map_preview = $("."+prefix+"preview_map");

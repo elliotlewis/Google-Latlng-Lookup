@@ -8,14 +8,17 @@ Google Maps Lat/Lng Lookup EE Fieldtype
 
 Version History
 ---------------
+ * __1.0.3 27/11/12__
+   - Altered validate method so empty values validate (thanks to Creative Lynx)
+   - Added SafeCracker compatibility
  * __1.0.2, 31/08/2012__
    - Allowed fine tuning of co-ordinates by adjusting form values
  * __1.0.1, 15/06/2012__  
-   - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates.
-   - Added more error feedback.
-   - Feedback on type of result returned, Eg. Approximate location. 
+   - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates
+   - Added more error feedback
+   - Feedback on type of result returned, Eg. Approximate location
  * __1.0, 12/06/2012__  
-    1st release. Global and Channel Field default settings.
+    1st release. Global and Channel Field default settings
 
 
 Requirements
@@ -39,6 +42,8 @@ The fieldtype has 3 fields, 1 is editable for the address and the other 2 show t
 **Note**
 
 This fieldtype only uses Google Maps CP side so once you have the Lng/Lat you can use any mapping service front-end you like.
+12/11 Technically this isn't true, https://developers.google.com/maps/documentation/geocoding/
+> The Geocoding API may only be used in conjunction with a Google map; geocoding results without displaying them on a map is prohibited. For complete details on allowed usage, consult the Maps API Terms of Service License Restrictions.
 
 If you use this Fieldtype let me know! Twitter: [@ElliotLewis](http://www.twitter.com/elliotlewis)
 

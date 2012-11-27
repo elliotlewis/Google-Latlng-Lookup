@@ -7,14 +7,30 @@
  * @category		Fieldtype
  * @author			Elliot Lewis
  * @copyright		Copyright (c) 2012, No Two The Same Ltd.
- * @link			http://devotee.com/
+ * @link			http://devot-ee.com/add-ons/google-latlng-lookup/
  */
+
+
+// Version History
+// ---------------
+//  * __1.0.3 27/11/12__
+//    - Altered validate method so empty values validate (thanks to Creative Lynx)
+//    - Added SafeCracker compatibility
+//  * __1.0.2, 31/08/2012__
+//    - Allowed fine tuning of co-ordinates by adjusting form values
+//  * __1.0.1, 15/06/2012__  
+//    - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates
+//    - Added more error feedback
+//    - Feedback on type of result returned, Eg. Approximate location
+//  * __1.0, 12/06/2012__  
+//     1st release. Global and Channel Field default settings
+
  
 class Google_latlng_lookup_ft extends EE_Fieldtype {
 	
 	var $info = array(
 		'name'		=> 'Google Maps Lat Lng Lookup',
-		'version'	=> '1.0.2'
+		'version'	=> '1.0.3'
 	);
 	
 	var $prefix = 'google_latlng_lookup_';
@@ -115,8 +131,10 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$lat = $this->EE->input->post($this->prefix.'latitude', TRUE);
 		$lng = $this->EE->input->post($this->prefix.'longitude', TRUE);
 		
-		if(!is_numeric($lat) || !is_numeric($lng)) {
-			return 'Latitude and Longitude must be numbers';
+		if(!empty($lat) || !empty($lng)){
+			if(!is_numeric($lat) || !is_numeric($lng)) {
+				return 'Latitude and Longitude must be numbers';
+			}
 		}
 		
 		return TRUE;
@@ -141,6 +159,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		return $latitude . ',' . $longitude;
 		
 	}
+	
 	// --------------------------------------------------------------------
 		
 	/**
@@ -313,8 +332,23 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$use_prefix ? $prefix = $this->prefix : $prefix = '';
 		
 		$this->EE->cp->add_to_head('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
-		$this->EE->cp->load_package_js('cp');
-		$this->EE->javascript->output('google_lat_lng_lookup_map("'.$prefix.'");'); // initialize map obj
+		
+		if(REQ == 'CP')
+		{
+			$this->EE->cp->load_package_js('cp');
+		}
+		else
+		{
+			if($this->EE->config->item('url_third_themes'))
+			{
+				$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('url_third_themes').'google_latlng_lookup/js/google_latlng_lookup.js"></script>');
+			}
+				$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('theme_folder_url').'third_party/google_latlng_lookup/js/google_latlng_lookup.js"></script>');
+			}
+		}
+		
+		$this->EE->javascript->output('google_lat_lng_lookup_map("'.$prefix.'");'); // initialize map obj		
+
 	}
 }
 
