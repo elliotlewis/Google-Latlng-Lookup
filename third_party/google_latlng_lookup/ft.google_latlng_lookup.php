@@ -343,6 +343,8 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 			{
 				$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('url_third_themes').'google_latlng_lookup/js/google_latlng_lookup.js"></script>');
 			}
+			else
+			{
 				$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('theme_folder_url').'third_party/google_latlng_lookup/js/google_latlng_lookup.js"></script>');
 			}
 		}
