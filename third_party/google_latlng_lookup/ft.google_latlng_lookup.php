@@ -6,13 +6,15 @@
  * @package			ExpressionEngine
  * @category		Fieldtype
  * @author			Elliot Lewis
- * @copyright		Copyright (c) 2012, No Two The Same Ltd.
+ * @copyright		Copyright (c) 2012-14, No Two The Same Ltd.
  * @link			http://devot-ee.com/add-ons/google-latlng-lookup/
  */
 
 
 // Version History
 // ---------------
+//	* __1.1 10/03/14__
+//	  - Data saved to DB as pipe delimited string, so added validation against address field containing | character. https://github.com/elliotlewis/Google-Latlng-Lookup/issues/4
 //  * __1.0.3 27/11/12__
 //    - Altered validate method so empty values validate (thanks to Creative Lynx)
 //    - Added SafeCracker compatibility
@@ -30,7 +32,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	
 	var $info = array(
 		'name'		=> 'Google Maps Lat Lng Lookup',
-		'version'	=> '1.0.3'
+		'version'	=> '1.1'
 	);
 	
 	var $prefix = 'google_latlng_lookup_';
@@ -128,13 +130,24 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	
 	function validate($data) {
 		
+		// only likely to happen if JS fails, but possible if user manually clears values
 		$lat = $this->EE->input->post($this->prefix.'latitude', TRUE);
 		$lng = $this->EE->input->post($this->prefix.'longitude', TRUE);
 		
-		if(!empty($lat) || !empty($lng)){
-			if(!is_numeric($lat) || !is_numeric($lng)) {
+		if(!empty($lat) || !empty($lng))
+		{
+			if(!is_numeric($lat) || !is_numeric($lng))
+			{
 				return 'Latitude and Longitude must be numbers';
 			}
+		}
+		
+		// validate address
+		$address = $this->EE->input->post($this->prefix.'address', TRUE);
+		
+		if(strpos($address, '|') !== FALSE)
+		{
+			return 'Address can not contain the pipe (|) character, please remove and submit again';
 		}
 		
 		return TRUE;
@@ -144,7 +157,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	// --------------------------------------------------------------------
 		
 	/**
-	 * Replace tag
+	 * Replace tag (ie render field in templates)
 	 *
 	 * @access	public
 	 * @param	field contents

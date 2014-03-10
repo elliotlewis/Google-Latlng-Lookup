@@ -8,6 +8,8 @@ Google Maps Lat/Lng Lookup EE Fieldtype
 
 Version History
 ---------------
+ * __1.1 10/03/14__
+   - Data saved to DB as pipe delimited string, so added validation against address field containing | character. https://github.com/elliotlewis/Google-Latlng-Lookup/issues/4
  * __1.0.3 27/11/12__
    - Altered validate method so empty values validate (thanks to Creative Lynx)
    - Added SafeCracker compatibility
@@ -41,8 +43,9 @@ The fieldtype has 3 fields, 1 is editable for the address and the other 2 show t
 
 **Note**
 
-This fieldtype only uses Google Maps CP side so once you have the Lng/Lat you can use any mapping service front-end you like.
-12/11 Technically this isn't true, https://developers.google.com/maps/documentation/geocoding/
+~~This fieldtype only uses Google Maps CP side so once you have the Lng/Lat you can use any mapping service front-end you like.~~
+
+Technically this isn't true, https://developers.google.com/maps/documentation/geocoding/
 > The Geocoding API may only be used in conjunction with a Google map; geocoding results without displaying them on a map is prohibited. For complete details on allowed usage, consult the Maps API Terms of Service License Restrictions.
 
 If you use this Fieldtype let me know! Twitter: [@ElliotLewis](http://www.twitter.com/elliotlewis)
