@@ -13,6 +13,8 @@
 
 // Version History
 // ---------------
+//  * __1.1.1 4/15/15__
+//    - Made all links protocol relative so that Control Panel will work properly in SSL or non-SSL environments (TJ Draper)
 //	* __1.1 10/03/14__
 //	  - Data saved to DB as pipe delimited string, so added validation against address field containing | character. https://github.com/elliotlewis/Google-Latlng-Lookup/issues/4
 //  * __1.0.3 27/11/12__
@@ -20,29 +22,29 @@
 //    - Added SafeCracker compatibility
 //  * __1.0.2, 31/08/2012__
 //    - Allowed fine tuning of co-ordinates by adjusting form values
-//  * __1.0.1, 15/06/2012__  
+//  * __1.0.1, 15/06/2012__
 //    - Fixed silly error where I was directly accessing the LatLng object instead of using built in function to return the co-ordinates
 //    - Added more error feedback
 //    - Feedback on type of result returned, Eg. Approximate location
-//  * __1.0, 12/06/2012__  
+//  * __1.0, 12/06/2012__
 //     1st release. Global and Channel Field default settings
 
- 
+
 class Google_latlng_lookup_ft extends EE_Fieldtype {
-	
+
 	var $info = array(
 		'name'		=> 'Google Maps Lat Lng Lookup',
-		'version'	=> '1.1'
+		'version'	=> '1.1.1'
 	);
-	
+
 	var $prefix = 'google_latlng_lookup_';
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Display Field on Publish
 	 * This handles both displaying default values from Channel Fields > Edit Field OR Global Settings
-	 * And reading saved data from channel entry. $data contains entry saved data with existing entry 
+	 * And reading saved data from channel entry. $data contains entry saved data with existing entry
 	 *
 	 * @access	public
 	 * @param	existing data
@@ -52,7 +54,7 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	function display_field($data)
 	{
 		$data_points = array('address', 'latitude', 'longitude');
-		
+
 		if ($data)
 		{
 			list($address, $latitude, $longitude) = explode('|', $data);
@@ -64,12 +66,12 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 				$$key = $this->settings[$key];
 			}
 		}
-		
+
 		// override values from POST if present
 		if(!empty($_POST)) {
-			
+
 			foreach($data_points as $key) {
-				
+
 				if(!empty($_POST[$this->prefix.$key])) {
 					$$key = $this->EE->input->post($this->prefix.$key,TRUE);
 				}
@@ -77,38 +79,38 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		}
 
 		$options = compact($data_points);
-		
+
 		$this->_cp_js();
-		
+
 		$form = '';
-		
+
 		$form .= '<div style="float:left;width:50%;">';
-		
+
 		$form .= form_label('Address', $this->prefix.'address').form_input($this->prefix.'address', $address, 'style="margin-bottom:10px;"');
 		$form .= form_button(array('name' => $this->prefix.'lookup_button', 'class' => 'submit'), 'Find Lat / Lng', 'style="cursor:pointer;margin-bottom:20px;"');
-		
+
 		$form .= '<br />';
-		
+
 		$form .= form_label('Latitude', $this->prefix.'latitude');
 		$form .= form_input($this->prefix.'latitude', $latitude, ' class="geocode_latlng geocode_lat" style="border-color:white;"');
-		
+
 		$form .= form_label('Longitude', $this->prefix.'longitude');
 		$form .= form_input($this->prefix.'longitude', $longitude, ' class="geocode_latlng geocode_lng" style="border-color:white;"');
-		
+
 		$form .= '<br /><span class="'.$this->prefix.'feedback" style="display:block;margin-top:5px;color:steelBlue;"></span>';
-		
+
 		$form .= '</div>';
-		
+
 		$markers = 'markers=color:blue%7Csize:mid%7Clabel:A%7C'.$latitude.','.$longitude;
-		$form .= '<img src="http://maps.googleapis.com/maps/api/staticmap?size=170x170&zoom=13&maptype=roadmap&'.$markers.'&sensor=false" alt="Preview map of address" class="'.$this->prefix.'preview_map" style="margin:20px; border:#5f6c74 1px solid;" />';
-		
+		$form .= '<img src="//maps.googleapis.com/maps/api/staticmap?size=170x170&zoom=13&maptype=roadmap&'.$markers.'&sensor=false" alt="Preview map of address" class="'.$this->prefix.'preview_map" style="margin:20px; border:#5f6c74 1px solid;" />';
+
 		$form .= form_input($this->field_name, implode('|', array_values($options)), 'id="'.$this->field_name.'"readonly="readonly" style="display:none;"');
-		
+
 		return $form;
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Prep data for saving
 	 *
@@ -119,21 +121,21 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	 */
 	function save($data)
 	{
-	
+
 		$data = $this->EE->input->post($this->prefix.'address', TRUE) . '|' . $this->EE->input->post($this->prefix.'latitude', TRUE) . '|' . $this->EE->input->post($this->prefix.'longitude', TRUE);
-		
+
 		return $data;
 	}
-	
-	
+
+
 	// --------------------------------------------------------------------
-	
+
 	function validate($data) {
-		
+
 		// only likely to happen if JS fails, but possible if user manually clears values
 		$lat = $this->EE->input->post($this->prefix.'latitude', TRUE);
 		$lng = $this->EE->input->post($this->prefix.'longitude', TRUE);
-		
+
 		if(!empty($lat) || !empty($lng))
 		{
 			if(!is_numeric($lat) || !is_numeric($lng))
@@ -141,21 +143,21 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 				return 'Latitude and Longitude must be numbers';
 			}
 		}
-		
+
 		// validate address
 		$address = $this->EE->input->post($this->prefix.'address', TRUE);
-		
+
 		if(strpos($address, '|') !== FALSE)
 		{
 			return 'Address can not contain the pipe (|) character, please remove and submit again';
 		}
-		
+
 		return TRUE;
-		
+
 	}
-	 
+
 	// --------------------------------------------------------------------
-		
+
 	/**
 	 * Replace tag (ie render field in templates)
 	 *
@@ -168,13 +170,13 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	{
 
 		list($address, $latitude, $longitude) = explode('|', $data);
-		
+
 		return $latitude . ',' . $longitude;
-		
+
 	}
-	
+
 	// --------------------------------------------------------------------
-		
+
 	/**
 	 * Replace tag modifiers
 	 *
@@ -187,31 +189,31 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	{
 
 		list($address, $latitude, $longitude) = explode('|', $data);
-		
+
 		return $address;
 	}
-	
+
 	function replace_latitude($data, $params = array(), $tagdata = FALSE)
 	{
 
 		list($address, $latitude, $longitude) = explode('|', $data);
-		
+
 		return $latitude;
 	}
-	
+
 	function replace_longitude($data, $params = array(), $tagdata = FALSE)
 	{
 
 		list($address, $latitude, $longitude) = explode('|', $data);
-		
+
 		return $longitude;
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Display Global Settings
-	 * View Addons > Fieldtypes > Google Maps Lat Lng Lookup 
+	 * View Addons > Fieldtypes > Google Maps Lat Lng Lookup
 	 *
 	 * @access	public
 	 * @return	form contents
@@ -220,14 +222,14 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	function display_global_settings()
 	{
 		$val = array_merge($this->settings, $_POST);
-		
+
 		// Add script tags
 		$this->_cp_js(FALSE);
-		
+
 		$form = '';
-		
+
 		$form .= '<h3>Default Details</h3>';
-		
+
 		$form .= '<p>';
 		$form .= form_label('Address', 'address').form_input('address', $val['address']);
 		$form .= '</p>';
@@ -240,15 +242,15 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$form .= '</p>';
 		$form .= '<p>';
 		$markers = 'markers=color:blue%7Csize:mid%7Clabel:A%7C'.$val['latitude'].','.$val['longitude'];
-		$form .= '<img src="http://maps.googleapis.com/maps/api/staticmap?size=170x170&zoom=13&maptype=roadmap&'.$markers.'&sensor=false" alt="Preview map of address" class="preview_map" style="margin:20px; border:#5f6c74 1px solid;" />';
+		$form .= '<img src="//maps.googleapis.com/maps/api/staticmap?size=170x170&zoom=13&maptype=roadmap&'.$markers.'&sensor=false" alt="Preview map of address" class="preview_map" style="margin:20px; border:#5f6c74 1px solid;" />';
 		$form .= '<br /><span class="feedback"></span>';
 		$form .= '</p>';
 
 		return $form;
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Save Global Settings
 	 *
@@ -260,9 +262,9 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	{
 		return array_merge($this->settings, $_POST);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Display Settings Screen
 	 *
@@ -275,24 +277,24 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 		$address	= isset($data['address']) ? $data['address'] : $this->settings['address'];
 		$latitude	= isset($data['latitude']) ? $data['latitude'] : $this->settings['latitude'];
 		$longitude	= isset($data['longitude']) ? $data['longitude'] : $this->settings['longitude'];
-		
+
 		$this->EE->table->add_row(
 			lang('Address', 'address'),
 			form_input('address', $address)
 		);
-		
+
 		$this->EE->table->add_row(
 			lang('Latitude', 'latitude'),
 			form_input('latitude', $latitude)
 		);
-		
+
 		$this->EE->table->add_row(
 			lang('Longitude', 'longitude'),
 			form_input('longitude', $longitude)
 		);
 
 	}
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -310,9 +312,9 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 			'longitude'	=> $this->EE->input->post('longitude')
 		);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Install Fieldtype
 	 *
@@ -328,9 +330,9 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 			'longitude'	=> ''
 		);
 	}
-	
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Control Panel Javascript
 	 *
@@ -341,11 +343,11 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 	function _cp_js( $use_prefix = TRUE )
 	{
 		// This js is used on all cp pages
-		
+
 		$use_prefix ? $prefix = $this->prefix : $prefix = '';
-		
-		$this->EE->cp->add_to_head('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>');
-		
+
+		$this->EE->cp->add_to_head('<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false"></script>');
+
 		if(REQ == 'CP')
 		{
 			$this->EE->cp->load_package_js('cp');
@@ -361,8 +363,8 @@ class Google_latlng_lookup_ft extends EE_Fieldtype {
 				$this->EE->cp->add_to_foot('<script type="text/javascript" src="'.$this->EE->config->item('theme_folder_url').'third_party/google_latlng_lookup/js/google_latlng_lookup.js"></script>');
 			}
 		}
-		
-		$this->EE->javascript->output('google_lat_lng_lookup_map("'.$prefix.'");'); // initialize map obj		
+
+		$this->EE->javascript->output('google_lat_lng_lookup_map("'.$prefix.'");'); // initialize map obj
 
 	}
 }
